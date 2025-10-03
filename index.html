@@ -56,10 +56,10 @@
         <th>タイトル</th>
         <th>内容</th>
       </tr>
-      <tr v-for="Data in data[service]">
-        <td></td>
-        <td>{{Data}}</td>
-        <td></td>
+      <tr v-for="DATA in data[service]">
+        <td>{{DATA.start_time.split("T")[1].split(":")[0]}}:{{DATA.start_time.split("T")[1].split(":")[1]}}</td>
+        <td>{{DATA.title}}</td>
+        <td>{{DATA.content}}</td>
       </tr>
     </table>
   </body>
@@ -70,26 +70,13 @@
         area: '130',
         service: 'g1',
         date: '2025-10-03',
-        getYMD() {
-          let utc = new Date();
-          let jst = new Date(utc.getTime() + 1000 * 60 * 60 * 9);
-          let y = jst.getFullYear();
-          let m = ('0' + (jst.getMonth() + 1)).slice(-2);
-          let d = ('0' + jst.getDate()).slice(-2);
-
-          return y + '-' + m + '-' + d;
-        },
+        data: {},
 
         // 変数（プロパティ）
         async fetchData() {
           const ApiKey = localStorage.getItem('APIKey');
 
           const query = new URLSearchParams({
-            // list: false,
-            // area: this.area,
-            // service: this.service,
-            // date: false,
-            // date: '2025-10-03',
             key: ApiKey
           });
 
@@ -104,8 +91,8 @@
             query;
           const res = await fetch(url);
           const obj = await res.json();
-          const data = obj.list;
-          console.log(JSON.stringify(this.data, null, 2));
+          this.data = obj.list;
+          console.log(JSON.stringify(this.data[this.service][0].start_time, null, 2));
         },
 
         // 自分で取得する
@@ -113,6 +100,15 @@
         // 関数（メソッド）
         getProgramList() {
           this.fetchData();
+        },
+        getYMD() {
+          let utc = new Date();
+          let jst = new Date(utc.getTime() + 1000 * 60 * 60 * 9);
+          let y = jst.getFullYear();
+          let m = ('0' + (jst.getMonth() + 1)).slice(-2);
+          let d = ('0' + jst.getDate()).slice(-2);
+
+          return y + '-' + m + '-' + d;
         }
       };
     }
