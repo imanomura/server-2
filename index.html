@@ -67,13 +67,16 @@
   <script>
     function dataset() {
       return {
+        // 変数（プロパティ）
         area: '',
         service: '',
         date: '',
         data: false,
+        // 自分で取得する
 
-        // 変数（プロパティ）
-        async fetchData() {
+        // 関数（メソッド）
+        async getProgramList() {
+          this.fetchData();
           const ApiKey = localStorage.getItem('APIKey');
 
           const query = new URLSearchParams({
@@ -97,13 +100,6 @@
           } else {
             this.data = [{ result: '失敗' }];
           }
-        },
-
-        // 自分で取得する
-
-        // 関数（メソッド）
-        getProgramList() {
-          this.fetchData();
         },
         getYMD() {
           let utc = new Date();
